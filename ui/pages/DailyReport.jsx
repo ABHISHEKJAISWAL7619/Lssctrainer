@@ -460,12 +460,12 @@ const DailyReport = ({ reportId }) => {
                     <td>{item.overallPassStatus}</td>
                     <td>{item.sessionTime}</td>
                     <td className="flex justify-center gap-3 py-2">
-                      <Link
+                      {/* <Link
                         href={`/daily-report/${item._id}`}
                         className="cursor-pointer text-gray-600 hover:text-blue-600"
                       >
                         <i className="ri-edit-box-line ri-xl"></i>
-                      </Link>
+                      </Link> */}
                       <i className="ri-git-repository-private-line ri-xl cursor-pointer text-gray-600 hover:text-blue-600"></i>
                       <span onClick={() => handledelete(item._id)}>
                         <i className="ri-delete-bin-6-line ri-xl cursor-pointer text-red-500 hover:text-red-700"></i>
