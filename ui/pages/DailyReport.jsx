@@ -466,7 +466,7 @@ const DailyReport = ({ reportId }) => {
                       >
                         <i className="ri-edit-box-line ri-xl"></i>
                       </Link> */}
-                      <i className="ri-git-repository-private-line ri-xl cursor-pointer text-gray-600 hover:text-blue-600"></i>
+                      {/* <i className="ri-git-repository-private-line ri-xl cursor-pointer text-gray-600 hover:text-blue-600"></i> */}
                       <span onClick={() => handledelete(item._id)}>
                         <i className="ri-delete-bin-6-line ri-xl cursor-pointer text-red-500 hover:text-red-700"></i>
                       </span>
