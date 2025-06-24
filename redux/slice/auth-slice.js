@@ -1,9 +1,5 @@
-'use client';
-import {
-  createAsyncThunk,
-  createSlice,
-  rejectWithValue,
-} from "@reduxjs/toolkit";
+"use client";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
@@ -24,7 +20,9 @@ export const Otpsend = createAsyncThunk(
       return data;
     } catch (error) {
       console.log(error);
-      return rejectWithValue(error.response?.data?.message || "Otp sent failed");
+      return rejectWithValue(
+        error.response?.data?.message || "Otp sent failed"
+      );
     }
   }
 );
@@ -48,7 +46,9 @@ export const loginuser = createAsyncThunk(
       return data;
     } catch (error) {
       console.log(error);
-      return rejectWithValue(error.response?.data?.message || "Otp sent failed");
+      return rejectWithValue(
+        error.response?.data?.message || "Otp sent failed"
+      );
     }
   }
 );

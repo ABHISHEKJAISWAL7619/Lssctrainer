@@ -199,7 +199,7 @@ export const deleteuserbyId = createAsyncThunk(
 );
 
 const initialState = {
-  course: [],
+  user: "",
   loading: false,
   error: null,
 };
@@ -211,15 +211,14 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // Create Newsletter
-      .addCase(createuser.pending, (state) => {
+      .addCase(getloginuser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(createuser.fulfilled, (state, action) => {
+      .addCase(getloginuser.fulfilled, (state, action) => {
         state.loading = false;
-        state.newsletters.push(action.payload);
       })
-      .addCase(createuser.rejected, (state, action) => {
+      .addCase(getloginuser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload?.message || "Failed to create newsletter";
       });
