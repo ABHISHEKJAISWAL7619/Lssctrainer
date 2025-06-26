@@ -97,10 +97,12 @@ const Addperformance = ({ reportId }) => {
 
     const latestBatchMap = {};
     data.forEach((b) => {
-      latestBatchMap[b.name] = b._id;
+      latestBatchMap[b.name.trim()] = b._id;
     });
 
-    if (!latestBatchMap[selectedBatch]) {
+    const batchKey = selectedBatch.trim();
+
+    if (!latestBatchMap[batchKey]) {
       setError("Invalid batch selected");
       return;
     }
@@ -145,7 +147,7 @@ const Addperformance = ({ reportId }) => {
     setError("");
 
     const dataform = {
-      batchId: latestBatchMap[selectedBatch],
+      batchId: latestBatchMap[batchKey], //
 
       trainingToday: formData.trainingToday === "Yes",
       timeOfReporting: formData.timeOfReporting,
