@@ -8,7 +8,6 @@ import {
 } from "@/redux/slice/batchperformance-slice";
 import { getallbatch } from "@/redux/slice/batch-slice";
 import { useRouter } from "next/navigation";
-
 import toast from "react-hot-toast";
 import Select from "../atoms/Select";
 import Input from "../atoms/Input";
@@ -80,21 +79,24 @@ const Addperformance = ({ reportId }) => {
   }, []);
 
   useEffect(() => {
-    if (reportId) fetchFormData();
+    if (reportId && Object.keys(batchNameMap).length > 0) {
+      fetchFormData();
+    }
   }, [reportId, batchNameMap]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate each field
     if (selectedBatch === "Select Batch") {
       setError("Please select a batch");
       return;
     }
-    // if (!formData.trainingToday) {
-    //   setError("Please select Training Today");
-    //   return;
-    // }
+
+    if (!batchMap[selectedBatch]) {
+      setError("Invalid batch selected");
+      return;
+    }
+
     if (!formData.timeOfReporting) {
       setError("Please enter Time of Reporting");
       return;
@@ -123,10 +125,6 @@ const Addperformance = ({ reportId }) => {
       setError("Please enter Behavioral Feedback");
       return;
     }
-    // if (!formData.assessmentToday) {
-    //   setError("Please select Assessment Today");
-    //   return;
-    // }
     if (!formData.overallPassStatus) {
       setError("Please enter Overall Pass/Fail Status");
       return;
@@ -136,7 +134,6 @@ const Addperformance = ({ reportId }) => {
       return;
     }
 
-    // All validation passed
     setError("");
 
     const dataform = {
@@ -156,15 +153,17 @@ const Addperformance = ({ reportId }) => {
 
     try {
       if (reportId) {
-        await dispatch(updatebatchperformanceBYiD({ dataform, reportId }));
-        toast.success("Updated successfully");
+        let res = await dispatch(
+          updatebatchperformanceBYiD({ dataform, reportId })
+        );
+        toast.success(res.payload.messsage);
       } else {
-        await dispatch(createbatchperformance(dataform));
-        toast.success("Created successfully");
+        let res = await dispatch(createbatchperformance(dataform));
+        toast.success(res.payload.messsage);
       }
       router.push("/daily-report");
-    } catch (err) {
-      toast.error("An error occurred");
+    } catch (error) {
+      toast.error(error.messsage);
     }
   };
 
