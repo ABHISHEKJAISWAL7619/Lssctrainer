@@ -10,8 +10,9 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import OverlayModal from "../common/OverlayModal";
+import Pagination from "../common/pagination";
 
-const DailyReport = () => {
+const DailyReport = ({ page }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [batchNameMap, setBatchNameMap] = useState({});
@@ -19,13 +20,7 @@ const DailyReport = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [showModal, setShowModal] = useState(false); // modal state
   const [deleteId, setDeleteId] = useState(null); // store selected id
-
-  const itemsPerPage = 3;
-  const totalPages = Math.ceil(allperformance.length / itemsPerPage);
-  const paginatedData = allperformance.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const [count, setCount] = useState(0);
 
   const fetchBatchMap = async () => {
     const res = await dispatch(getallbatch());
@@ -35,7 +30,10 @@ const DailyReport = () => {
   };
 
   const fetchAllPerformances = async () => {
-    const res = await dispatch(getallbatchperformance());
+    const res = await dispatch(
+      getallbatchperformance({ filter: { limit: 6, page } })
+    );
+    setCount(res.payload.count);
     setAllPerformance(res.payload?.data || []);
     setCurrentPage(1);
   };
@@ -81,14 +79,14 @@ const DailyReport = () => {
             </tr>
           </thead>
           <tbody>
-            {paginatedData.length === 0 ? (
+            {allperformance.length === 0 ? (
               <tr>
                 <td colSpan="5" className="text-center py-4 text-gray-500">
                   No performance available
                 </td>
               </tr>
             ) : (
-              paginatedData.map((item, i) => (
+              allperformance.map((item, i) => (
                 <tr
                   key={i}
                   className="border-b border-gray-200 text-sm hover:bg-gray-50"
@@ -125,28 +123,7 @@ const DailyReport = () => {
           </tbody>
         </table>
       </div>
-
-      {totalPages > 1 && (
-        <div className="flex justify-end items-center gap-4 mt-4">
-          <button
-            disabled={currentPage === 1}
-            className="px-4 py-2 border rounded disabled:opacity-50"
-            onClick={() => setCurrentPage((prev) => prev - 1)}
-          >
-            Previous
-          </button>
-          <span className="text-sm">
-            Page {currentPage} of {totalPages}
-          </span>
-          <button
-            disabled={currentPage === totalPages}
-            className="px-4 py-2 border rounded disabled:opacity-50"
-            onClick={() => setCurrentPage((prev) => prev + 1)}
-          >
-            Next
-          </button>
-        </div>
-      )}
+      <Pagination total={count} pageSize={6} />
 
       {showModal && (
         <OverlayModal

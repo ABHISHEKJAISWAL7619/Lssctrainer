@@ -38,7 +38,7 @@ export const createbatch = createAsyncThunk(
 
 export const getallbatch = createAsyncThunk(
   "batch/getall",
-  async (_, { rejectWithValue }) => {
+  async ({ filter }={}, { rejectWithValue }) => {
     const token = Cookies.get("token");
     if (!token) {
       return rejectWithValue({ message: "Unauthorized: No token found" });
@@ -50,6 +50,7 @@ export const getallbatch = createAsyncThunk(
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
+        params: filter,
       });
       console.log("batch fetched:", data);
       return data;

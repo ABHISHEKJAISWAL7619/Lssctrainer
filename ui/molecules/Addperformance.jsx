@@ -156,14 +156,14 @@ const Addperformance = ({ reportId }) => {
         let res = await dispatch(
           updatebatchperformanceBYiD({ dataform, reportId })
         );
-        toast.success(res.payload.messsage);
+        toast.success(res.payload.message);
       } else {
         let res = await dispatch(createbatchperformance(dataform));
-        toast.success(res.payload.messsage);
+        toast.success(res.payload.message);
       }
       router.push("/daily-report");
     } catch (error) {
-      toast.error(error.messsage);
+      toast.error(error.message);
     }
   };
 

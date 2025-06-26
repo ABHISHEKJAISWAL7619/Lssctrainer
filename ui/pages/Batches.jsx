@@ -4,14 +4,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import Pagination from "../common/pagination";
 
-const Batches = () => {
+const Batches = ({ page }) => {
   const dispatch = useDispatch();
   const [batches, setBatches] = useState([]);
+  const [count, setCount] = useState(0);
 
   const fetchBatches = async () => {
     try {
-      const res = await dispatch(getallbatch());
+      const res = await dispatch(getallbatch({ filter: { limit: 6, page } }));
+      setCount(res.payload.count);
       const allBatches = res?.payload?.data;
       if (Array.isArray(allBatches)) {
         setBatches(allBatches);
@@ -85,6 +88,7 @@ const Batches = () => {
               </tbody>
             </table>
           </div>
+          <Pagination total={count} pageSize={6} />
         </div>
       </div>
     </section>

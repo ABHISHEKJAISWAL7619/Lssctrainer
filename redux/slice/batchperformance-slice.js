@@ -37,7 +37,7 @@ export const createbatchperformance = createAsyncThunk(
 );
 export const getallbatchperformance = createAsyncThunk(
   "batchperformance/getall",
-  async (_, { rejectWithValue }) => {
+  async ({ filter }, { rejectWithValue }) => {
     const token = Cookies.get("token");
     if (!token) {
       return rejectWithValue({ message: "Unauthorized: No token found" });
@@ -51,6 +51,7 @@ export const getallbatchperformance = createAsyncThunk(
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
+          params: filter,
         }
       );
       console.log("batchperformance fetched:", data);

@@ -10,7 +10,7 @@ const CurrentBatch = () => {
 
   const fetchBatches = async () => {
     try {
-      const res = await dispatch(getallbatch());
+      const res = await dispatch(getallbatch({ filter: {} }));
       const batches = res?.payload?.data;
       if (batches && batches.length > 0) {
         setFirstBatch(batches[0]);
