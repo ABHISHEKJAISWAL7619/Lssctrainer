@@ -92,14 +92,17 @@ const Addperformance = ({ reportId }) => {
       return;
     }
 
-    if (!batchMap[selectedBatch]) {
-      // Fetch latest batch list if stale
-      await fetchBatches();
+    const res = await dispatch(getallbatch());
+    const data = res.payload?.data || [];
 
-      if (!batchMap[selectedBatch]) {
-        setError("Invalid batch selected");
-        return;
-      }
+    const latestBatchMap = {};
+    data.forEach((b) => {
+      latestBatchMap[b.name] = b._id;
+    });
+
+    if (!latestBatchMap[selectedBatch]) {
+      setError("Invalid batch selected");
+      return;
     }
 
     if (!formData.timeOfReporting) {
@@ -142,7 +145,8 @@ const Addperformance = ({ reportId }) => {
     setError("");
 
     const dataform = {
-      batchId: batchMap[selectedBatch],
+      batchId: latestBatchMap[selectedBatch],
+
       trainingToday: formData.trainingToday === "Yes",
       timeOfReporting: formData.timeOfReporting,
       sessionTime: formData.sessionTime,
