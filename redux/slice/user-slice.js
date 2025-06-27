@@ -199,7 +199,7 @@ export const deleteuserbyId = createAsyncThunk(
 );
 
 const initialState = {
-  user: "",
+  user: {},
   loading: false,
   error: null,
 };
@@ -210,17 +210,17 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Create Newsletter
       .addCase(getloginuser.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
       .addCase(getloginuser.fulfilled, (state, action) => {
+        // console.log(action);
         state.loading = false;
+        state.user = action.payload.user;
       })
       .addCase(getloginuser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload?.message || "Failed to create newsletter";
+        state.error = action.payload || null;
       });
   },
 });
