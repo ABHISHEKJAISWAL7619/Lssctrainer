@@ -11,9 +11,12 @@ import useFile from "@/hooks/useFile";
 const Profile = () => {
   const dispatch = useDispatch();
   const { uploadFile } = useFile();
-  const fileInputRef = useRef(null); // for auto trigger
+  const fileInputRef = useRef(null);
 
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [formErrors, setFormErrors] = useState([]);
+
   const [formData, setFormData] = useState({
     name: "",
     employeeId: "",
@@ -26,7 +29,6 @@ const Profile = () => {
 
   const getuserdetails = async () => {
     const res = await dispatch(getloginuser());
-    console.log(res);
     const user = res.payload?.user;
     if (user) {
       setFormData({
@@ -45,12 +47,29 @@ const Profile = () => {
     getuserdetails();
   }, []);
 
+  const validateForm = () => {
+    const errors = [];
+    if (!formData.name.trim()) errors.push("Full Name is required");
+    if (!formData.employeeId.trim()) errors.push("Employee ID is required");
+    if (!formData.specialization.trim())
+      errors.push("Specialization is required");
+    if (!formData.email.trim()) errors.push("Email is required");
+    return errors;
+  };
+
   const handleupdate = async (e) => {
     e.preventDefault();
+
     if (uploadingPhoto) {
       toast.error("Please wait until photo upload completes");
       return;
     }
+
+    const errors = validateForm();
+    setFormErrors(errors);
+    if (errors.length > 0) return;
+
+    setIsUpdating(true);
     const res = await dispatch(updateloginuser(formData));
     if (res.error) {
       toast.error("Update failed. Please try again.");
@@ -58,6 +77,7 @@ const Profile = () => {
       toast.success("User profile updated successfully");
       await getuserdetails();
     }
+    setIsUpdating(false);
   };
 
   const handleImageUpload = async (e) => {
@@ -92,7 +112,6 @@ const Profile = () => {
       <h2 className="font-bold text-3xl">Profile Information</h2>
       <div className="bg-white p-3 lg:p-4 rounded-xl border-quinary border">
         <form className="lg:w-[60%] space-y-4 mx-auto" onSubmit={handleupdate}>
-          {/* Hidden file input */}
           <input
             ref={fileInputRef}
             type="file"
@@ -121,33 +140,32 @@ const Profile = () => {
             <span className="text-[#4379EE] text-center block pt-1 text-sm">
               {uploadingPhoto ? "Uploading photo..." : "Click to Upload Photo"}
             </span>
-            {uploadingPhoto && (
+            {/* {uploadingPhoto && (
               <div className="absolute top-24 text-blue-600 font-medium text-xs">
                 Uploading...
               </div>
-            )}
+            )} */}
           </div>
 
-          {/* Form Inputs */}
+          {/* Inputs */}
           <Input
-            label={"Full Name"}
+            label={"Full Name *"}
             icon={"ri-user-smile-line"}
             placeholder={"Enter your full name"}
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             disabled={uploadingPhoto}
           />
+
           <Input
-            label={"Employee ID"}
+            label={"Employee ID *"}
             placeholder={"Enter Employee ID"}
             value={formData.employeeId}
-            onChange={(e) =>
-              setFormData({ ...formData, employeeId: e.target.value })
-            }
-            disabled={uploadingPhoto}
+            disabled={true}
           />
+
           <Input
-            label={"Specialization"}
+            label={"Specialization *"}
             icon={"ri-graduation-cap-line"}
             placeholder={"Enter your specialization"}
             value={formData.specialization}
@@ -163,13 +181,10 @@ const Profile = () => {
               icon={"ri-phone-line"}
               placeholder={"+91 xxx xxx xxx"}
               value={formData.mobile}
-              onChange={(e) =>
-                setFormData({ ...formData, mobile: e.target.value })
-              }
-              disabled={uploadingPhoto}
+              disabled={true}
             />
             <Input
-              label={"Email Address"}
+              label={"Email Address *"}
               icon={"ri-mail-line"}
               placeholder={"name@gmail.com"}
               value={formData.email}
@@ -183,10 +198,7 @@ const Profile = () => {
               icon={"ri-user-settings-line"}
               placeholder={"Assessor/Trainer"}
               value={formData.role}
-              onChange={(e) =>
-                setFormData({ ...formData, role: e.target.value })
-              }
-              disabled={uploadingPhoto}
+              disabled={true}
             />
           </div>
 
@@ -209,6 +221,15 @@ const Profile = () => {
             </ul>
           </div>
 
+          {/* Show Errors */}
+          {formErrors.length > 0 && (
+            <div className="text-red-600 text-sm space-y-1">
+              {formErrors.map((err, i) => (
+                <p key={i}>• {err}</p>
+              ))}
+            </div>
+          )}
+
           {/* Buttons */}
           <div className="flex justify-end pt-6 gap-4">
             <button
@@ -225,16 +246,43 @@ const Profile = () => {
                   avatar: "",
                 })
               }
-              disabled={uploadingPhoto}
+              disabled={uploadingPhoto || isUpdating}
             >
               Clear Form
             </button>
+
             <button
               type="submit"
-              className="bg-primary text-white py-2 px-4 rounded-md"
-              disabled={uploadingPhoto}
+              className="bg-primary text-white py-2 px-4 rounded-md flex items-center justify-center min-w-[120px]"
+              disabled={uploadingPhoto || isUpdating}
             >
-              Update Info
+              {isUpdating ? (
+                <span className="flex items-center gap-2">
+                  <svg
+                    className="animate-spin h-4 w-4 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 018 8z"
+                    ></path>
+                  </svg>
+                  Updating...
+                </span>
+              ) : (
+                "Update Info"
+              )}
             </button>
           </div>
         </form>
