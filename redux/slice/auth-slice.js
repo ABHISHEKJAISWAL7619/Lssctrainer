@@ -38,9 +38,12 @@ export const loginuser = createAsyncThunk(
       );
       console.log(data);
 
-      const role = data?.data?.role;
+      const role = data?.user?.role;
       const token = data.token;
       console.log(token);
+      if (role !== "trainer") {
+        return rejectWithValue("Only trainer can login in this panel.");
+      }
 
       Cookies.set("token", token, { expires: 6 });
       return data;

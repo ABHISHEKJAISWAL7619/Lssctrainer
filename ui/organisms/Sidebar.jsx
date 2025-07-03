@@ -109,16 +109,16 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                 Are you sure you want to log out from your account?
               </h2>
 
-              <div className="flex gap-4 mt-6">
+              <div className="flex cursor-default gap-4 mt-6">
                 <button
                   onClick={handleConfirmLogout}
-                  className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition"
+                  className="bg-red-600 text-white cursor-pointer px-6 py-2 rounded-lg hover:bg-red-700 transition"
                 >
                   Confirm
                 </button>
                 <button
                   onClick={handleCancelLogout}
-                  className="bg-gray-300 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-400 transition"
+                  className="bg-gray-300 text-gray-800 px-6 py-2 cursor-pointer rounded-lg hover:bg-gray-400 transition"
                 >
                   Cancel
                 </button>
