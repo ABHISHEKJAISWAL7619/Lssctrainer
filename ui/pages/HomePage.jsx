@@ -3,14 +3,67 @@ import StatsCard from "../molecules/StatsCard";
 import data from "@/public/db/data.json";
 import CertificationRate from "../charts/CertificationRate";
 import OverlayModal from "../common/OverlayModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddBatch from "../molecules/AddBatch";
-// import TopStudents from "../molecules/TopStudents";
 import CurrentBatch from "../molecules/CurrentBatch";
+import { useDispatch } from "react-redux";
+import { getallstats } from "@/redux/slice/dashboard-slice";
 
 const HomePage = () => {
+  let dispatch = useDispatch();
   const [isBatch, setIsBatch] = useState(false);
-  const { stats } = data;
+  const [Value, setValue] = useState({});
+
+  const getallstatsvalue = async () => {
+    let res = await dispatch(getallstats());
+    setValue(res.payload);
+  };
+
+  useEffect(() => {
+    getallstatsvalue();
+  }, [dispatch]);
+  let stats = [
+    {
+      title: "total students",
+      span: "trained",
+      icon: "/icon/users.png",
+      count: Value.totalStudentsTrained,
+      growth: "8.5",
+      timeline: "yesterday",
+    },
+    {
+      title: "overall pass %",
+      span: "",
+      icon: "/icon/grow.png",
+      count: Value.overallPassPercent,
+      growth: "1.3",
+      timeline: "last week",
+    },
+    {
+      title: "average marks",
+      span: "theory",
+      icon: "/icon/product.png",
+      count: Value.averageMarksTheory,
+      growth: "4.3",
+      timeline: "yesterday",
+    },
+    {
+      title: "average marks",
+      span: "practical",
+      icon: "/icon/box.png",
+      count: Value.averageMarksPractical,
+      growth: "1.8",
+      timeline: "yesterday",
+    },
+    {
+      title: "total batch",
+      span: "conducted",
+      icon: "/icon/add.png",
+      count: Value.totalBatchesConducted,
+      growth: "8.5",
+      timeline: "last month",
+    },
+  ];
   return (
     <section className="space-y-6">
       <div className="flex lg:flex-row flex-col justify-between gap-4 lg:items-center">

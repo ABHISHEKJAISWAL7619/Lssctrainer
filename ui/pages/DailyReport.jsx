@@ -31,7 +31,7 @@ const DailyReport = ({ page }) => {
 
   const fetchAllPerformances = async () => {
     const res = await dispatch(
-      getallbatchperformance({ filter: { limit: 6, page } })
+      getallbatchperformance({ filter: { limit: 8, page } })
     );
     setCount(res.payload.count);
     setAllPerformance(res.payload?.data || []);
@@ -53,7 +53,7 @@ const DailyReport = ({ page }) => {
   useEffect(() => {
     fetchBatchMap();
     fetchAllPerformances();
-  }, []);
+  }, [page]);
 
   return (
     <section className="p-4 space-y-6 relative">
@@ -123,7 +123,7 @@ const DailyReport = ({ page }) => {
           </tbody>
         </table>
       </div>
-      <Pagination total={count} pageSize={6} />
+      <Pagination total={count} pageSize={8} />
 
       {showModal && (
         <OverlayModal
