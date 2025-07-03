@@ -36,9 +36,40 @@ export const createbatch = createAsyncThunk(
   }
 );
 
+export const deletebatch = createAsyncThunk(
+  "create/batch",
+  async (id, { rejectWithValue }) => {
+    // payload pass karen yahan se
+    const token = Cookies.get("token");
+    if (!token) {
+      return rejectWithValue({ message: "Unauthorized: No token found" });
+    }
+
+    try {
+      const { data } = await axios.delete(
+        `${API_BASE_URL}api/trainer/batch/${id}`,
+        // batch data yahan bhejna hai
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("batch deleted:", data);
+      return data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue({
+        message: error?.response?.data?.message || "Failed to fetch",
+      });
+    }
+  }
+);
+
 export const getallbatch = createAsyncThunk(
   "batch/getall",
-  async ({ filter }={}, { rejectWithValue }) => {
+  async ({ filter } = {}, { rejectWithValue }) => {
     const token = Cookies.get("token");
     if (!token) {
       return rejectWithValue({ message: "Unauthorized: No token found" });

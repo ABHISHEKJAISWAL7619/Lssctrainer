@@ -22,7 +22,7 @@ const HomePage = () => {
         </h2>
         <button
           onClick={() => setIsBatch(true)}
-          className="text-white py-3.5 px-10 rounded-sm bg-primary text-sm"
+          className="text-white  cursor-pointer py-3.5 px-10 rounded-sm bg-primary text-sm"
         >
           + Add Batch
         </button>

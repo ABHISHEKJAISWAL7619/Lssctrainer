@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
@@ -12,7 +13,6 @@ import toast from "react-hot-toast";
 import Select from "../atoms/Select";
 import Input from "../atoms/Input";
 import Textarea from "../atoms/Textarea";
-import Image from "next/image";
 
 const Addperformance = ({ reportId }) => {
   const dispatch = useDispatch();
@@ -23,6 +23,7 @@ const Addperformance = ({ reportId }) => {
   const [batchNameMap, setBatchNameMap] = useState({});
   const [selectedBatch, setSelectedBatch] = useState("Select Batch");
   const [error, setError] = useState();
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     trainingToday: "",
@@ -34,7 +35,7 @@ const Addperformance = ({ reportId }) => {
     theoryUnderstandingRating: "",
     behavioralFeedback: "",
     assessmentToday: "",
-    overallPassStatus: "",
+    overallPassStatus: "Pass",
     certificationStatus: "",
   });
 
@@ -92,63 +93,42 @@ const Addperformance = ({ reportId }) => {
       return;
     }
 
-    const res = await dispatch(getallbatch());
-    const data = res.payload?.data || [];
-
-    const latestBatchMap = {};
-    data.forEach((b) => {
-      latestBatchMap[b.name.trim()] = b._id;
-    });
-
-    const batchKey = selectedBatch.trim();
-
-    if (!latestBatchMap[batchKey]) {
+    const batchId = batchMap[selectedBatch.trim()];
+    if (!batchId) {
       setError("Invalid batch selected");
       return;
     }
 
-    if (!formData.timeOfReporting) {
-      setError("Please enter Time of Reporting");
-      return;
-    }
-    if (!formData.sessionTime) {
-      setError("Please enter Session Time");
-      return;
-    }
-    if (!formData.totalBatchStrength) {
-      setError("Please enter Total Batch Strength");
-      return;
-    }
-    if (!formData.noOfStudentsAttended) {
-      setError("Please enter No of Students Attended");
-      return;
-    }
-    if (!formData.practicalSkillRating) {
-      setError("Please enter Practical Skill Rating");
-      return;
-    }
-    if (!formData.theoryUnderstandingRating) {
-      setError("Please enter Theory Understanding Rating");
-      return;
-    }
-    if (!formData.behavioralFeedback) {
-      setError("Please enter Behavioral Feedback");
-      return;
-    }
-    if (!formData.overallPassStatus) {
-      setError("Please enter Overall Pass/Fail Status");
-      return;
-    }
-    if (!formData.certificationStatus) {
-      setError("Please enter Certification Status");
-      return;
-    }
+    if (!formData.timeOfReporting)
+      return setError("Please enter Time of Reporting");
+    if (!formData.sessionTime) return setError("Please enter Session Time");
+    if (!formData.totalBatchStrength)
+      return setError("Please enter Total Batch Strength");
+    if (!formData.noOfStudentsAttended)
+      return setError("Please enter No of Students Attended");
+    if (!formData.practicalSkillRating)
+      return setError("Please enter Practical Skill Rating");
+    if (formData.practicalSkillRating < 1 || formData.practicalSkillRating > 5)
+      return setError("Practical Skill Rating must be between 1 and 5");
+    if (!formData.theoryUnderstandingRating)
+      return setError("Please enter Theory Understanding Rating");
+    if (
+      formData.theoryUnderstandingRating < 1 ||
+      formData.theoryUnderstandingRating > 5
+    )
+      return setError("Theory Understanding Rating must be between 1 and 5");
+    if (!formData.behavioralFeedback)
+      return setError("Please enter Behavioral Feedback");
+    if (!formData.overallPassStatus)
+      return setError("Please enter Overall Pass/Fail Status");
+    if (!formData.certificationStatus)
+      return setError("Please enter Certification Status");
 
     setError("");
+    setLoading(true);
 
     const dataform = {
-      batchId: latestBatchMap[batchKey], //
-
+      batchId,
       trainingToday: formData.trainingToday === "Yes",
       timeOfReporting: formData.timeOfReporting,
       sessionTime: formData.sessionTime,
@@ -164,26 +144,25 @@ const Addperformance = ({ reportId }) => {
 
     try {
       if (reportId) {
-        let res = await dispatch(
+        const res = await dispatch(
           updatebatchperformanceBYiD({ dataform, reportId })
         );
         toast.success(res.payload.message);
       } else {
-        let res = await dispatch(createbatchperformance(dataform));
+        const res = await dispatch(createbatchperformance(dataform));
         toast.success(res.payload.message);
       }
       router.push("/daily-report");
-    } catch (error) {
-      toast.error(error.message);
+    } catch (err) {
+      toast.error(err.message || "Failed to submit");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
   const handleBatchChange = (e) => setSelectedBatch(e.target.value);
-
   const handleClear = () => {
     setSelectedBatch("Select Batch");
     setFormData({
@@ -215,6 +194,7 @@ const Addperformance = ({ reportId }) => {
             options={batchOptions}
             value={selectedBatch}
             onChange={handleBatchChange}
+            disabled={loading}
           />
 
           <div className="flex flex-col lg:flex-row gap-4">
@@ -224,53 +204,63 @@ const Addperformance = ({ reportId }) => {
               options={["Yes", "No"]}
               value={formData.trainingToday}
               onChange={handleChange}
+              disabled={loading}
             />
             <Input
+              type="time"
               label="Time of Reporting"
-              placeholder="16:40 hrs"
               name="timeOfReporting"
               value={formData.timeOfReporting}
               onChange={handleChange}
+              disabled={loading}
             />
           </div>
 
           <Input
             label="Session Time"
-            placeholder="4 hrs"
             name="sessionTime"
             value={formData.sessionTime}
             onChange={handleChange}
+            disabled={loading}
           />
 
           <div className="flex flex-col lg:flex-row gap-4">
             <Input
+              type="number"
               label="Total Batch Strength"
               name="totalBatchStrength"
               value={formData.totalBatchStrength}
               onChange={handleChange}
+              disabled={loading}
             />
             <Input
+              type="number"
               label="No of Students Attended"
               name="noOfStudentsAttended"
               value={formData.noOfStudentsAttended}
               onChange={handleChange}
+              disabled={loading}
             />
           </div>
 
           <div className="flex flex-col lg:flex-row gap-4">
             <Input
+              type="number"
               label="Practical Skill Rating"
               name="practicalSkillRating"
               placeholder="Rate out of 5"
               value={formData.practicalSkillRating}
               onChange={handleChange}
+              disabled={loading}
             />
             <Input
+              type="number"
               label="Theory Understanding Rating"
               name="theoryUnderstandingRating"
               placeholder="Rate out of 5"
               value={formData.theoryUnderstandingRating}
               onChange={handleChange}
+              disabled={loading}
             />
           </div>
 
@@ -279,6 +269,7 @@ const Addperformance = ({ reportId }) => {
             name="behavioralFeedback"
             value={formData.behavioralFeedback}
             onChange={handleChange}
+            disabled={loading}
           />
 
           <Select
@@ -287,40 +278,28 @@ const Addperformance = ({ reportId }) => {
             options={["Yes", "No"]}
             value={formData.assessmentToday}
             onChange={handleChange}
+            disabled={loading}
           />
 
           <div className="flex flex-col lg:flex-row gap-4">
-            <Input
+            <Select
               label="Overall Pass/Fail Status"
               name="overallPassStatus"
+              options={["Pass", "Fail"]}
               value={formData.overallPassStatus}
               onChange={handleChange}
+              disabled={loading}
             />
             <Input
+              type="number"
               label="Certification Status"
               name="certificationStatus"
               value={formData.certificationStatus}
               onChange={handleChange}
+              disabled={loading}
             />
           </div>
 
-          <div className="border-[#BFDBFE] rounded-xl gap-2 border p-4 bg-[#EFF6FF]">
-            <span className="flex gap-2 items-center text-[#1E40AF] font-medium text-sm">
-              <Image
-                className="w-4 h-4"
-                src="/icon/i.png"
-                width={100}
-                height={100}
-                alt="info"
-              />
-              Tips for filling the form
-            </span>
-            <ul className="list-disc text-sm ps-10 text-[#1D4ED8]">
-              <li>All fields marked with * are mandatory</li>
-              <li>Use your official email address</li>
-              <li>Phone number should include country code</li>
-            </ul>
-          </div>
           <p className="text-red-500">{error}</p>
 
           <div className="flex justify-end pt-6 gap-4">
@@ -328,14 +307,42 @@ const Addperformance = ({ reportId }) => {
               type="button"
               className="border-[#D1D5DB] rounded-md py-2 px-4 border"
               onClick={handleClear}
+              disabled={loading}
             >
               Clear Form
             </button>
+
             <button
               type="submit"
-              className="bg-primary text-white py-2 px-6 rounded-md"
+              disabled={loading}
+              className="bg-primary text-white py-2 px-6 rounded-md flex items-center justify-center min-w-[120px]"
             >
-              {reportId ? "Update Info" : "Submit Info"}
+              {loading ? (
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 018 8z"
+                  ></path>
+                </svg>
+              ) : reportId ? (
+                "Update Info"
+              ) : (
+                "Submit Info"
+              )}
             </button>
           </div>
         </form>

@@ -7,6 +7,7 @@ import { getloginuser, updateloginuser } from "@/redux/slice/user-slice";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import useFile from "@/hooks/useFile";
+import Link from "next/link";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -232,28 +233,18 @@ const Profile = () => {
 
           {/* Buttons */}
           <div className="flex justify-end pt-6 gap-4">
-            <button
+            <Link
+              href={"/"}
               type="button"
-              className="border-[#D1D5DB] rounded-md py-2 px-4 border"
-              onClick={() =>
-                setFormData({
-                  name: "",
-                  employeeId: "",
-                  specialization: "",
-                  mobile: "",
-                  email: "",
-                  role: "",
-                  avatar: "",
-                })
-              }
+              className="border-[#D1D5DB] rounded-md  cursor-pointer py-2 px-4 border"
               disabled={uploadingPhoto || isUpdating}
             >
-              Clear Form
-            </button>
+              Cancil
+            </Link>
 
             <button
               type="submit"
-              className="bg-primary text-white py-2 px-4 rounded-md flex items-center justify-center min-w-[120px]"
+              className="bg-primary  cursor-pointer text-white py-2 px-4 rounded-md flex items-center justify-center min-w-[120px]"
               disabled={uploadingPhoto || isUpdating}
             >
               {isUpdating ? (

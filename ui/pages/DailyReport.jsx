@@ -138,13 +138,13 @@ const DailyReport = ({ page }) => {
               <div className="flex justify-center gap-4 pt-4">
                 <button
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 border rounded text-gray-700"
+                  className="px-4  cursor-pointer py-2 border rounded text-gray-700"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={() => handleDelete(deleteId)}
-                  className="px-4 py-2 bg-red-600 text-white rounded"
+                  className="px-4 py-2 cursor-pointer bg-red-600 text-white rounded"
                 >
                   Confirm
                 </button>
