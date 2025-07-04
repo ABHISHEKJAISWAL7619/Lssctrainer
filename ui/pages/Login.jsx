@@ -29,10 +29,10 @@ export default function LoginPage() {
 
     let res = await dispatch(Otpsend(formdata));
     if (res?.payload?.message) {
-      toast.success(res.payload.message);
+      toast.success(res?.payload?.message);
       router.push(`/otp-verify?mobile=${mobile}`);
     } else {
-      console.log(res.payload);
+      console.log(res?.payload);
       toast.error(res?.payload);
     }
   };

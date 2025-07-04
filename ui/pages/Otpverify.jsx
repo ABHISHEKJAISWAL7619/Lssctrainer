@@ -32,10 +32,10 @@ const Otpverify = ({ mobile }) => {
       const res = await dispatch(loginuser(obj));
 
       if (res.payload?.message) {
-        toast.success(res.payload.message);
+        toast.success(res?.payload?.message);
         router.push("/");
       } else {
-        toast.error(res.payload || " Login failed");
+        toast.error(res?.payload || " Login failed");
       }
     } catch (error) {
       const errMsg =

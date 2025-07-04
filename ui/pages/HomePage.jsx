@@ -16,7 +16,7 @@ const HomePage = () => {
 
   const getallstatsvalue = async () => {
     let res = await dispatch(getallstats());
-    setValue(res.payload);
+    setValue(res?.payload);
   };
 
   useEffect(() => {
@@ -27,7 +27,7 @@ const HomePage = () => {
       title: "total students",
       span: "trained",
       icon: "/icon/users.png",
-      count: Value.totalStudentsTrained,
+      count: Value?.totalStudentsTrained,
       growth: "8.5",
       timeline: "yesterday",
     },
@@ -35,7 +35,7 @@ const HomePage = () => {
       title: "overall pass %",
       span: "",
       icon: "/icon/grow.png",
-      count: Value.overallPassPercent,
+      count: Value?.overallPassPercent,
       growth: "1.3",
       timeline: "last week",
     },
@@ -43,7 +43,7 @@ const HomePage = () => {
       title: "average marks",
       span: "theory",
       icon: "/icon/product.png",
-      count: Value.averageMarksTheory,
+      count: Value?.averageMarksTheory,
       growth: "4.3",
       timeline: "yesterday",
     },
@@ -51,7 +51,7 @@ const HomePage = () => {
       title: "average marks",
       span: "practical",
       icon: "/icon/box.png",
-      count: Value.averageMarksPractical,
+      count: Value?.averageMarksPractical,
       growth: "1.8",
       timeline: "yesterday",
     },
@@ -59,7 +59,7 @@ const HomePage = () => {
       title: "total batch",
       span: "conducted",
       icon: "/icon/add.png",
-      count: Value.totalBatchesConducted,
+      count: Value?.totalBatchesConducted,
       growth: "8.5",
       timeline: "last month",
     },

@@ -92,15 +92,15 @@ const DailyReport = ({ page }) => {
                   className="border-b border-gray-200 text-sm hover:bg-gray-50"
                 >
                   <td className="px-4 text-left py-2">
-                    {batchNameMap[item.batchId] || "Unknown"}
+                    {batchNameMap[item?.batchId] || "Unknown"}
                   </td>
                   <td className="px-4 text-left py-2">
-                    {item.totalBatchStrength}
+                    {item?.totalBatchStrength}
                   </td>
                   <td className="px-4 text-left py-2">
-                    {item.overallPassStatus}
+                    {item?.overallPassStatus}
                   </td>
-                  <td className="px-4 text-left py-2">{item.sessionTime}</td>
+                  <td className="px-4 text-left py-2">{item?.sessionTime}</td>
                   <td className="px-4 text-left py-2">
                     <div className="flex justify-center gap-3">
                       <Link

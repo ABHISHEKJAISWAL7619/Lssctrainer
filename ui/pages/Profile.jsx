@@ -30,7 +30,7 @@ const Profile = () => {
 
   const getuserdetails = async () => {
     const res = await dispatch(getloginuser());
-    const user = res.payload?.user;
+    const user = res?.payload?.user;
     if (user) {
       setFormData({
         name: user.name || "",

@@ -91,15 +91,15 @@ const Batches = ({ page }) => {
                 {batches.length > 0 ? (
                   batches.map((batch) => (
                     <tr key={batch._id} className="border-b border-quinary">
-                      <td className="p-2 text-left">{batch.name}</td>
+                      <td className="p-2 text-left">{batch?.name}</td>
                       <td className="p-2 text-left">
-                        {batch.trainer?.name || "N/A"}
+                        {batch?.trainer?.name || "N/A"}
                       </td>
                       <td className="p-2 text-left">
-                        {limitTextLength(batch.course?.title, 50) || "N/A"}
+                        {limitTextLength(batch?.course?.title, 50) || "N/A"}
                       </td>
                       <td className="p-2 text-left">
-                        {new Date(batch.startAt).toLocaleDateString("en-IN")}
+                        {new Date(batch?.startAt).toLocaleDateString("en-IN")}
                       </td>
                       <td className="px-4 text-left py-2">
                         <div className="flex justify-center gap-3">
