@@ -84,7 +84,7 @@ const Batches = ({ page }) => {
                   <th className="text-left p-2">Trainer Name</th>
                   <th className="text-left p-2">Course Name</th>
                   <th className="text-left p-2">Start At</th>
-                  <th className="text-left p-2">Actions</th>
+                  <th className="text-center p-2">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -102,7 +102,7 @@ const Batches = ({ page }) => {
                         {new Date(batch?.startAt).toLocaleDateString("en-IN")}
                       </td>
                       <td className="px-4 text-left py-2">
-                        <div className="flex justify-center gap-3">
+                        <div className="flex text-left justify-center gap-3">
                           <span
                             onClick={() => confirmDelete(batch._id)}
                             className="cursor-pointer text-red-500 hover:text-red-700"
@@ -116,7 +116,7 @@ const Batches = ({ page }) => {
                 ) : (
                   <tr>
                     <td colSpan="5" className="p-2 text-center text-gray-500">
-                      Loading batch data...
+                      No batch found
                     </td>
                   </tr>
                 )}
